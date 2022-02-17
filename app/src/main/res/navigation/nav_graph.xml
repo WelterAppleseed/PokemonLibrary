@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/launchFragment">
+
+    <fragment
+        android:id="@+id/favoritePokemonsFragment"
+        android:name="com.example.pokemonlibrary.presentation.fragments.FavoritePokemonsFragment"
+        android:label="fragment_favorite_pokemons"
+        tools:layout="@layout/fragment_favorite_pokemons" >
+        <action
+            android:id="@+id/action_favoritePokemonsFragment_to_searchedPokemonsFragment"
+            app:destination="@id/searchedPokemonsFragment" />
+        <action
+            android:id="@+id/action_favoritePokemonsFragment_to_randomPokemonsFragment"
+            app:destination="@id/randomPokemonsFragment" />
+        <action
+            android:id="@+id/action_favoritePokemonsFragment_to_singlePokemonFragment"
+            app:destination="@id/singlePokemonFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/randomPokemonsFragment"
+        android:name="com.example.pokemonlibrary.presentation.fragments.RandomPokemonsFragment"
+        android:label="fragment_random_pokemons">
+        <action
+            android:id="@+id/action_randomPokemonsFragment_to_favoritePokemonsFragment"
+            app:destination="@id/favoritePokemonsFragment" />
+        <action
+            android:id="@+id/action_randomPokemonsFragment_to_searchedPokemonsFragment"
+            app:destination="@id/searchedPokemonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchedPokemonsFragment"
+        android:name="com.example.pokemonlibrary.presentation.fragments.SearchedPokemonsFragment"
+        android:label="fragment_searched_pokemons"
+        tools:layout="@layout/fragment_searched_pokemons" >
+        <action
+            android:id="@+id/action_searchedPokemonsFragment_to_favoritePokemonsFragment"
+            app:destination="@id/favoritePokemonsFragment" />
+        <action
+            android:id="@+id/action_searchedPokemonsFragment_to_randomPokemonsFragment"
+            app:destination="@id/randomPokemonsFragment" />
+        <action
+            android:id="@+id/action_searchedPokemonsFragment_to_singlePokemonFragment"
+            app:destination="@id/singlePokemonFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/launchFragment"
+        android:name="com.example.pokemonlibrary.presentation.fragments.LaunchFragment"
+        android:label="fragment_launch"
+        tools:layout="@layout/fragment_launch" >
+        <action
+            android:id="@+id/action_launchFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_launchFragment_to_searchedPokemonsFragment"
+            app:destination="@id/searchedPokemonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.example.pokemonlibrary.presentation.fragments.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_randomPokemonsFragment"
+            app:destination="@id/randomPokemonsFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_searchedPokemonsFragment"
+            app:destination="@id/searchedPokemonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singlePokemonFragment"
+        android:name="com.example.pokemonlibrary.presentation.fragments.SinglePokemonFragment"
+        android:label="SinglePokemonFragment" >
+        <action
+            android:id="@+id/action_singlePokemonFragment_to_searchedPokemonsFragment"
+            app:destination="@id/searchedPokemonsFragment" />
+        <action
+            android:id="@+id/action_singlePokemonFragment_to_favoritePokemonsFragment"
+            app:destination="@id/favoritePokemonsFragment" />
+    </fragment>
+</navigation>

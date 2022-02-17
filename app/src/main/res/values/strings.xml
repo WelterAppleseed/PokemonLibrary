@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PokemonLibrary</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Pokemon Library</string>
+    <string name="fav_pokemons_title">Favorite Pokemons</string>
+    <string name="random_pokemons_title">Random Pokemons</string>
+    <string name="search_pokemons_title">Search Pokemons</string>
+    <string name="EXTRA_NAME_ID">EXTRA_NAME_ID</string>
+    <string name="EXTRA_EDIT_TEXT_VALUE">EXTRA_EDIT_TEXT_VALUE</string>
+    <string name="attack_tv">Attacks:</string>
+    <string name="stats_tv">Stats:</string>
+    <string name="common_stats">№%d  %sWeight: %d  Height: %d</string>
+    <string name="pokemon_states">Name: %s\nAbilities: %s\nHeight: %s\nWeight: %s\nState:\n%s</string>
+</resources>
