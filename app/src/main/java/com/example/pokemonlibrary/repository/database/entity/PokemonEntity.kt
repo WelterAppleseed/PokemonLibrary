@@ -3,14 +3,13 @@ package com.example.pokemonlibrary.repository.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.pokemonlibrary.repository.database.pojo.Sprites
+import com.example.pokemonlibrary.repository.database.pojo.*
 import com.example.pokemonlibrary.repository.database.type_converters.AbilityConverter
-import com.example.pokemonlibrary.repository.database.type_converters.ListConverter
 import com.example.pokemonlibrary.repository.database.type_converters.StateConverter
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "pokemons")
-@TypeConverters(value =  [AbilityConverter::class, StateConverter::class, ListConverter::class])
+@TypeConverters(value =  [AbilityConverter::class, StateConverter::class])
 data class PokemonEntity(
     @PrimaryKey
     @SerializedName("id")

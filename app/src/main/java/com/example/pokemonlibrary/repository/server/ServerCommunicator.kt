@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit
 
 class ServerCommunicator(private val pokemonApiService: PokemonApiService) {
     companion object {
-        private val DEFAULT_TIMEOUT = 10
-        private val DEFAULT_RETRY_ATTEMPS = 4L
+        private const val DEFAULT_TIMEOUT = 10
+        private const val DEFAULT_RETRY_ATTEMPS = 4L
     }
 
     fun getAllPokemons(): Single<ListOfPokemonUrls> {

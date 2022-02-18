@@ -2,8 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/favotite_pokemons_item"
-        android:icon="@drawable/sprite"
-        app:showAsAction="ifRoom"
-        android:title="@string/search_pokemons_title"/>
+        android:icon="@drawable/fav_on"
+        android:title="@string/search_pokemons_title"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -1,47 +1,44 @@
 package com.example.pokemonlibrary.presentation.fragments
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemonlibrary.PokemonLibraryApp
 import com.example.pokemonlibrary.R
 import com.example.pokemonlibrary.adapter.PokemonsAdapter
-import com.example.pokemonlibrary.domain.SearchPokemonViewModel
+import com.example.pokemonlibrary.domain.RepositoryPokemonViewModel
+import com.example.pokemonlibrary.domain.SearchRecyclerViewModel
+import com.example.pokemonlibrary.replaceByName
 import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
-import com.example.pokemonlibrary.single_live_data.OnAddToFavoriteClickListener
-import com.example.pokemonlibrary.single_live_data.PokemonCardClickListener
-import io.reactivex.rxkotlin.toMaybe
+import com.example.pokemonlibrary.presentation.interfaces.OnAddToFavoriteClickListener
+import com.example.pokemonlibrary.presentation.interfaces.PokemonCardClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_favorite_pokemons.view.*
-import kotlinx.android.synthetic.main.fragment_searched_pokemons.view.*
 import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FavoritePokemonsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FavoritePokemonsFragment : BaseFragment() {
 
-    var searchPokemonViewModel: SearchPokemonViewModel? = null
+    var repositoryPokemonViewModel: RepositoryPokemonViewModel? = null
         @Inject set
+    private lateinit var handleListViewModel: SearchRecyclerViewModel
 
     private var favPokemonList = mutableListOf<PokemonEntity>()
     private var navigationId = 0
+    private lateinit var pokemonList: MutableList<PokemonEntity>
     override fun onCreate(savedInstanceState: Bundle?) {
         navigationId = arguments?.getInt("from")!!
         initMenuBackClickListener(navigationId, null)
+        initBackClickCallback(null, navigationId)
+        handleListViewModel = ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
+        handleListViewModel.bundleFromSearch.observe(this, {
+            pokemonList = it
+        })
         super.onCreate(savedInstanceState)
     }
     override fun onCreateView(
@@ -56,11 +53,15 @@ class FavoritePokemonsFragment : BaseFragment() {
 
     private fun initRecycler(view: View) {
         val manager = GridLayoutManager(context, 2)
-        println(favPokemonList)
-        favPokemonList = searchPokemonViewModel?.getAllFavoritesPokemon()!!
+        favPokemonList = repositoryPokemonViewModel?.getAllFavoritesPokemon()!!
         val adapter = PokemonsAdapter(favPokemonList, pokemonClickListener, favClickListener)
         view.fav_recycler?.layoutManager = manager
         view.fav_recycler?.adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        (activity as AppCompatActivity).fav_toolbar.navigationIcon = null
+        super.onDestroyView()
     }
 
     fun updateList(pokemon: PokemonEntity) {
@@ -81,6 +82,8 @@ class FavoritePokemonsFragment : BaseFragment() {
         deleteFromFavs(pokemon.name)
         val index = favPokemonList.indexOf(pokemon)
         favPokemonList.remove(pokemon)
+        repositoryPokemonViewModel?.update(pokemon)
+        pokemonList.replaceByName(pokemon)
         view?.findViewById<RecyclerView>(R.id.fav_recycler)?.adapter?.notifyItemRemoved(index)
     }
     private val  pokemonClickListener = object : PokemonCardClickListener {

@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
     app:startDestination="@id/launchFragment">
 
     <fragment
@@ -19,6 +18,9 @@
         <action
             android:id="@+id/action_favoritePokemonsFragment_to_singlePokemonFragment"
             app:destination="@id/singlePokemonFragment" />
+        <action
+            android:id="@+id/action_favoritePokemonsFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
         android:id="@+id/randomPokemonsFragment"
@@ -30,6 +32,9 @@
         <action
             android:id="@+id/action_randomPokemonsFragment_to_searchedPokemonsFragment"
             app:destination="@id/searchedPokemonsFragment" />
+        <action
+            android:id="@+id/action_randomPokemonsFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchedPokemonsFragment"
@@ -45,6 +50,9 @@
         <action
             android:id="@+id/action_searchedPokemonsFragment_to_singlePokemonFragment"
             app:destination="@id/singlePokemonFragment" />
+        <action
+            android:id="@+id/action_searchedPokemonsFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
         android:id="@+id/launchFragment"
@@ -54,9 +62,6 @@
         <action
             android:id="@+id/action_launchFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
-        <action
-            android:id="@+id/action_launchFragment_to_searchedPokemonsFragment"
-            app:destination="@id/searchedPokemonsFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -69,6 +74,9 @@
         <action
             android:id="@+id/action_menuFragment_to_searchedPokemonsFragment"
             app:destination="@id/searchedPokemonsFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_favoritePokemonsFragment"
+            app:destination="@id/favoritePokemonsFragment" />
     </fragment>
     <fragment
         android:id="@+id/singlePokemonFragment"

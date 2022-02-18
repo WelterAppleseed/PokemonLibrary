@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/search_pokemon_fragment"
-        android:icon="@drawable/sprite"
+        android:icon="@drawable/search"
         android:title="@string/search_pokemons_title"/>
     <item
         android:id="@+id/random_pokemon_fragment"
-        android:icon="@drawable/front"
+        android:icon="@drawable/random"
         android:title="@string/random_pokemons_title"/>
 </menu>

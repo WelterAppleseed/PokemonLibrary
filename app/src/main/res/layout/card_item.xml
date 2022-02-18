@@ -17,7 +17,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_gravity="end"
-        android:background="@android:drawable/btn_star_big_off"
+        android:background="@drawable/fav_off"
         android:scaleType="centerCrop" />
 
     <LinearLayout

@@ -30,7 +30,7 @@ interface PokemonDao {
     fun update(pokemon: PokemonEntity)
 
     @Update
-    fun update(pookemons: List<PokemonEntity>)
+    fun update(pokemons: List<PokemonEntity>)
 
 
     @Delete

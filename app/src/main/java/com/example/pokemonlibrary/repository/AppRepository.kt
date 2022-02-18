@@ -2,7 +2,6 @@ package com.example.pokemonlibrary.repository
 
 import com.example.pokemonlibrary.repository.database.AppDatabase
 import com.example.pokemonlibrary.repository.database.entity.*
-import com.example.pokemonlibrary.repository.database.pojo.Sprites
 import com.example.pokemonlibrary.repository.server.ServerCommunicator
 import com.example.pokemonlibrary.repository.subretrofit.Common
 import io.reactivex.Single
@@ -22,7 +21,7 @@ class AppRepository(
         return communicator.getAllPokemons()
             .flatMap {
                 val service = Common.retrofitService
-                var pokList = mutableListOf<PokemonEntity>()
+                val pokList: MutableList<PokemonEntity>
                 if (database.allPokemonDao().getAll().size != it.count) {
                     val syncList: CopyOnWriteArrayList<PokemonEntity> =
                         CopyOnWriteArrayList<PokemonEntity>()
@@ -33,8 +32,8 @@ class AppRepository(
                     }
                     Thread.sleep(2000)
                     pokList = syncList.toMutableList()
+                    database.allPokemonDao().insert(pokList)
                 }
-                database.allPokemonDao().insert(pokList)
                 Single.just(database.allPokemonDao().getAll())
             }
             .subscribeOn(Schedulers.io())
@@ -45,18 +44,16 @@ class AppRepository(
     fun getPokemon(name: String): Single<PokemonEntity> {
         return communicator.getPokemonByName(name)
             .map {
-                return@map it
+                return@map database.allPokemonDao().getPokemon(name)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
     fun update(pokemonEntity: PokemonEntity) {
-        println("121")
-        database.allPokemonDao().insert(pokemonEntity)
+        database.allPokemonDao().update(pokemonEntity)
     }
 
     fun getFavorites(): MutableList<PokemonEntity> {
         return (database.allPokemonDao().getFavoritePokemons(true) as MutableList<PokemonEntity>)
     }
-
 }

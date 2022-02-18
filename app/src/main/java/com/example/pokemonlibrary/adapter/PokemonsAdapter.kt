@@ -1,21 +1,17 @@
 package com.example.pokemonlibrary.adapter
 
-import android.content.Context
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemonlibrary.R
 import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
 import com.example.pokemonlibrary.setNormalCharCases
-import com.example.pokemonlibrary.single_live_data.OnAddToFavoriteClickListener
-import com.example.pokemonlibrary.single_live_data.PokemonCardClickListener
+import com.example.pokemonlibrary.presentation.interfaces.OnAddToFavoriteClickListener
+import com.example.pokemonlibrary.presentation.interfaces.PokemonCardClickListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_item.view.*
 import java.util.*
@@ -29,7 +25,7 @@ class PokemonsAdapter(
 
     var nestedCardClickListener: PokemonCardClickListener = cardClickListener
     var nestedFavoriteClickListener: OnAddToFavoriteClickListener = favoriteClickListener
-    var pokemonFilterList = listOf<PokemonEntity>()
+    private var pokemonFilterList = listOf<PokemonEntity>()
 
     init {
         pokemonFilterList = pokemonList
@@ -48,9 +44,9 @@ class PokemonsAdapter(
         val pokemon = pokemonFilterList[position]
         holder.pokemonName.text = pokemonFilterList[position].name.setNormalCharCases()
         if (pokemon.isFavorite) {
-            holder.pokemonFav.setImageResource(android.R.drawable.btn_star_big_on)
+            holder.pokemonFav.setImageResource(R.drawable.fav_on_dr)
         } else {
-            holder.pokemonFav.setImageResource(android.R.drawable.btn_star_big_off)
+            holder.pokemonFav.setImageResource(R.drawable.fav_off_dr)
         }
         Picasso.get().load(pokemon.sprites.other.officialArtwork.frontDefault)
             .placeholder(R.drawable.noimg).into(holder.pokemonIcon)
@@ -75,15 +71,16 @@ class PokemonsAdapter(
                 pokemon.isFavorite = !pokemon.isFavorite
                 if (!isFav) {
                     nestedFavoriteClickListener.addToFav(pokemon)
-                    (it as ImageView).setImageResource(android.R.drawable.btn_star_big_on)
+                    (it as ImageView).setImageResource(R.drawable.fav_on_dr)
                 } else {
-                    (it as ImageView).setImageResource(android.R.drawable.btn_star_big_off)
+                    (it as ImageView).setImageResource(R.drawable.fav_off_dr)
                     nestedFavoriteClickListener.deleteFromFav(pokemon)
                 }
             }
         }
 
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun filter(substring: String) {
         val resultList = ArrayList<PokemonEntity>()
         for (row in pokemonList) {
