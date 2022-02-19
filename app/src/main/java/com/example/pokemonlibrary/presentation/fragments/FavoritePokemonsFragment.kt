@@ -13,10 +13,10 @@ import com.example.pokemonlibrary.R
 import com.example.pokemonlibrary.adapter.PokemonsAdapter
 import com.example.pokemonlibrary.domain.RepositoryPokemonViewModel
 import com.example.pokemonlibrary.domain.SearchRecyclerViewModel
-import com.example.pokemonlibrary.replaceByName
-import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
 import com.example.pokemonlibrary.presentation.interfaces.OnAddToFavoriteClickListener
 import com.example.pokemonlibrary.presentation.interfaces.PokemonCardClickListener
+import com.example.pokemonlibrary.replaceByName
+import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_favorite_pokemons.view.*
 import javax.inject.Inject
@@ -35,12 +35,14 @@ class FavoritePokemonsFragment : BaseFragment() {
         navigationId = arguments?.getInt("from")!!
         initMenuBackClickListener(navigationId, null)
         initBackClickCallback(null, navigationId)
-        handleListViewModel = ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
+        handleListViewModel =
+            ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
         handleListViewModel.bundleFromSearch.observe(this, {
             pokemonList = it
         })
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,7 +56,7 @@ class FavoritePokemonsFragment : BaseFragment() {
     private fun initRecycler(view: View) {
         val manager = GridLayoutManager(context, 2)
         favPokemonList = repositoryPokemonViewModel?.getAllFavoritesPokemon()!!
-        val adapter = PokemonsAdapter(favPokemonList, pokemonClickListener, favClickListener)
+        val adapter = PokemonsAdapter(view.context, favPokemonList, pokemonClickListener, favClickListener)
         view.fav_recycler?.layoutManager = manager
         view.fav_recycler?.adapter = adapter
     }
@@ -78,6 +80,7 @@ class FavoritePokemonsFragment : BaseFragment() {
             deleteFromFavoritePokemonList(pokemon)
         }
     }
+
     private fun deleteFromFavoritePokemonList(pokemon: PokemonEntity) {
         deleteFromFavs(pokemon.name)
         val index = favPokemonList.indexOf(pokemon)
@@ -86,16 +89,21 @@ class FavoritePokemonsFragment : BaseFragment() {
         pokemonList.replaceByName(pokemon)
         view?.findViewById<RecyclerView>(R.id.fav_recycler)?.adapter?.notifyItemRemoved(index)
     }
-    private val  pokemonClickListener = object : PokemonCardClickListener {
+
+    private val pokemonClickListener = object : PokemonCardClickListener {
         override fun openDetail(entity: PokemonEntity) {
             openDetailItem(entity.name)
         }
 
     }
+
     private fun openDetailItem(name: String) {
         val bundle = Bundle()
         bundle.putString(context?.getString(R.string.EXTRA_NAME_ID), name)
-        bundle.putInt("from_fav_frag", R.id.action_singlePokemonFragment_to_favoritePokemonsFragment)
+        bundle.putInt(
+            "from_fav_frag",
+            R.id.action_singlePokemonFragment_to_favoritePokemonsFragment
+        )
         bundle.putInt("from", navigationId)
         navigateTo(bundle, R.id.action_favoritePokemonsFragment_to_singlePokemonFragment)
         (activity as AppCompatActivity).fav_toolbar.navigationIcon = null

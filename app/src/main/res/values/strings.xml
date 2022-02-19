@@ -8,4 +8,6 @@
     <string name="attack_tv">Attacks:</string>
     <string name="stats_tv">Stats:</string>
     <string name="common_stats">№%d  %sWeight: %d  Height: %d</string>
+    <string name="collection_name">Pokemons</string>
+
 </resources>

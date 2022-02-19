@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -86,8 +85,11 @@ abstract class BaseFragment: Fragment() {
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
+    fun getOnlineState(): Boolean {
+        return isOnline(this.context!!)
+    }
     @RequiresApi(Build.VERSION_CODES.M)
-    fun isOnline(context: Context): Boolean {
+    private fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
@@ -109,5 +111,10 @@ abstract class BaseFragment: Fragment() {
             }
         }
         return false
+    }
+
+    override fun onDestroy() {
+        this.activity?.getSharedPreferences("connect_state", Context.MODE_PRIVATE)?.edit()?.putString("connect_state", "connection")?.apply()
+        super.onDestroy()
     }
 }

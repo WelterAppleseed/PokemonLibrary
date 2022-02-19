@@ -1,6 +1,5 @@
-package com.example.pokemonlibrary.repository.database.entity
+package com.example.pokemonlibrary.repository.database.pojo
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 

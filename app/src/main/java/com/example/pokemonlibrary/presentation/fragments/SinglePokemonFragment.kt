@@ -35,10 +35,11 @@ class SinglePokemonFragment: PokemonCardBaseFragment() {
         pokemonName = arguments?.getString(context?.getString(R.string.EXTRA_NAME_ID))!!
         if (arguments?.getInt("from_fav_frag")!! != 0) {
             transitId = arguments?.getInt("from_fav_frag")!!
-            transitFrom =  arguments?.getInt("from")!!
+            transitFrom = arguments?.getInt("from")!!
         }
         initBackClickCallback(arguments?.getInt("from")!!, transitId)
-        handleViewModel = ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
+        handleViewModel =
+            ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
         handleViewModel.bundleFromSearch.observe(this, {
             pokemonList = it
         })
@@ -50,7 +51,7 @@ class SinglePokemonFragment: PokemonCardBaseFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.pokemon_card, container, false)
         (view.context.applicationContext as PokemonLibraryApp).getViewModelComponent().inject(this)
-        viewModel?.getPokemon(pokemonName)
+        viewModel?.getPokemon(pokemonName, getOnlineState())
         view.back_button.setOnClickListener {
             val bundle = Bundle()
             if (transitFrom != 0) {

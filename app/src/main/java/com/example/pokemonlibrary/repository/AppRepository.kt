@@ -14,40 +14,50 @@ import kotlin.concurrent.thread
 
 class AppRepository(
     private val communicator: ServerCommunicator,
-    private val database: AppDatabase
+    private val database: AppDatabase,
 ) {
 
-    fun getAllPokemons(): Single<List<PokemonEntity>>? {
-        return communicator.getAllPokemons()
-            .flatMap {
-                val service = Common.retrofitService
-                val pokList: MutableList<PokemonEntity>
-                if (database.allPokemonDao().getAll().size != it.count) {
-                    val syncList: CopyOnWriteArrayList<PokemonEntity> =
-                        CopyOnWriteArrayList<PokemonEntity>()
-                    for (i in 0 until it.count) {
-                        thread {
-                            syncList.add(service.getPokemon(it.results[i].name).blockingGet())
+    fun getAllPokemons(isOnline: Boolean): Single<List<PokemonEntity>>? {
+        if (isOnline) {
+            return communicator.getAllPokemons()
+                .flatMap {
+                    val service = Common.retrofitService
+                    val pokList: MutableList<PokemonEntity>
+                    if (database.allPokemonDao().getAll().size != it.count) {
+                        val syncList: CopyOnWriteArrayList<PokemonEntity> =
+                            CopyOnWriteArrayList<PokemonEntity>()
+                        for (i in 0 until it.count) {
+                            thread {
+                                val data = service.getPokemon(it.results[i].name).blockingGet()
+                                data.id = i.toLong()
+                                syncList.add(data)
+                            }
                         }
+                        Thread.sleep(2000)
+                        pokList = syncList.toMutableList()
+                        database.allPokemonDao().insert(pokList)
                     }
-                    Thread.sleep(2000)
-                    pokList = syncList.toMutableList()
-                    database.allPokemonDao().insert(pokList)
+                    Single.just(database.allPokemonDao().getAll())
                 }
-                Single.just(database.allPokemonDao().getAll())
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+        } else {
+            return Single.just(database.allPokemonDao().getAll())
+        }
     }
 
 
-    fun getPokemon(name: String): Single<PokemonEntity> {
-        return communicator.getPokemonByName(name)
-            .map {
-                return@map database.allPokemonDao().getPokemon(name)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+    fun getPokemon(name: String, isOnline: Boolean): Single<PokemonEntity> {
+        if (isOnline) {
+            return communicator.getPokemonByName(name)
+                .map {
+                    return@map database.allPokemonDao().getPokemon(name)
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+        } else {
+            return Single.just(database.allPokemonDao().getPokemon(name))
+        }
     }
     fun update(pokemonEntity: PokemonEntity) {
         database.allPokemonDao().update(pokemonEntity)

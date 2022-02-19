@@ -1,23 +1,25 @@
 package com.example.pokemonlibrary.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.pokemonlibrary.R
-import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
-import com.example.pokemonlibrary.setNormalCharCases
 import com.example.pokemonlibrary.presentation.interfaces.OnAddToFavoriteClickListener
 import com.example.pokemonlibrary.presentation.interfaces.PokemonCardClickListener
-import com.squareup.picasso.Picasso
+import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
+import com.example.pokemonlibrary.setNormalCharCases
 import kotlinx.android.synthetic.main.card_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class PokemonsAdapter(
+    val context: Context,
     private val pokemonList: List<PokemonEntity>,
     cardClickListener: PokemonCardClickListener,
     favoriteClickListener: OnAddToFavoriteClickListener
@@ -48,8 +50,10 @@ class PokemonsAdapter(
         } else {
             holder.pokemonFav.setImageResource(R.drawable.fav_off_dr)
         }
-        Picasso.get().load(pokemon.sprites.other.officialArtwork.frontDefault)
-            .placeholder(R.drawable.noimg).into(holder.pokemonIcon)
+        Glide.with(context)
+            .load(pokemon.sprites.other.officialArtwork.frontDefault)
+            .placeholder(R.drawable.noimg)
+            .into(holder.pokemonIcon)
         holder.bind(pokemon)
     }
 

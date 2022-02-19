@@ -1,9 +1,9 @@
 package com.example.pokemonlibrary.di.module
 
+import com.example.pokemonlibrary.di.scope.RepositoryScope
 import com.example.pokemonlibrary.repository.AppRepository
 import com.example.pokemonlibrary.repository.database.AppDatabase
 import com.example.pokemonlibrary.repository.server.ServerCommunicator
-import com.example.pokemonlibrary.di.scope.RepositoryScope
 import dagger.Module
 import dagger.Provides
 

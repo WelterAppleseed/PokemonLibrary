@@ -1,8 +1,7 @@
 package com.example.pokemonlibrary.repository.database.type_converters
 
 import androidx.room.TypeConverter
-import com.example.pokemonlibrary.repository.database.entity.*
-import com.example.pokemonlibrary.repository.database.pojo.Sprites
+import com.example.pokemonlibrary.repository.database.pojo.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -83,7 +82,7 @@ object AbilityConverter {
     @TypeConverter
     @JvmStatic
     fun toAbility(value: String): Ability {
-        var ab: Ability
+        val ab: Ability
         val malType = object : TypeToken<Ability>() {}.type
         val list = Gson().fromJson<Ability>(value, malType)
         ab = Ability(list.abilityName, list.abilityDescription)

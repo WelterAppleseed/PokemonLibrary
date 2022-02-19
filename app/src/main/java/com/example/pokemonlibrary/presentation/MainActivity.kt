@@ -1,11 +1,10 @@
 package com.example.pokemonlibrary.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
 import com.example.pokemonlibrary.PokemonLibraryApp
 import com.example.pokemonlibrary.R
-import com.example.pokemonlibrary.di.component.ViewModelComponent
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

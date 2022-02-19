@@ -31,7 +31,8 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/noimg" />
 
         <TextView
             android:id="@+id/pokemon_name"

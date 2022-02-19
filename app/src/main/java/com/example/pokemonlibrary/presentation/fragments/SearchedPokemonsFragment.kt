@@ -55,7 +55,7 @@ class SearchedPokemonsFragment : BaseFragment() {
     private fun initRecycler(view: View, list: List<PokemonEntity>) {
         adapterList = list
         val manager = GridLayoutManager(context, 2)
-        adapter = PokemonsAdapter(adapterList, pokemonClickListener, favClickListener)
+        adapter = PokemonsAdapter(view.context, adapterList, pokemonClickListener, favClickListener)
         view.pokemon_recycler?.layoutManager = manager
         view.pokemon_recycler?.adapter = adapter
     }

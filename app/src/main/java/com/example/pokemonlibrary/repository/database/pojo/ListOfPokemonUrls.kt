@@ -9,5 +9,4 @@ data class ListOfPokemonUrls(
     var next: String,
     @SerializedName("results")
     var results : List<Result>
-) {
-}
+)

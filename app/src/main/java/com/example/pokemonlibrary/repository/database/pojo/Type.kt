@@ -1,10 +1,10 @@
-package com.example.pokemonlibrary.repository.database.entity
+package com.example.pokemonlibrary.repository.database.pojo
 
 import com.google.gson.annotations.SerializedName
 
-data class Stat(
+data class Type(
     @SerializedName("name")
     var name: String,
-    @SerializedName("stat")
+    @SerializedName("url")
     var url: String
 )

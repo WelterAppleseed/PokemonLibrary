@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
+    id 'com.google.gms.google-services'
 }
 
 
@@ -11,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.pokemonlibrary"
-        minSdk 21
+        minSdk 23
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -59,8 +60,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.5.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
 
-    //Picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
     //Room
     implementation "androidx.room:room-runtime:2.4.1"
@@ -87,5 +89,7 @@ dependencies {
 
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
-    implementation 'com.github.kittinunf.fuel:fuel-android:1.15.1'
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+
 }
