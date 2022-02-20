@@ -1,9 +1,9 @@
 package com.example.pokemonlibrary.di.module
 
+import com.example.pokemonlibrary.BuildConfig
 import com.example.pokemonlibrary.repository.server.PokemonApiService
 import com.example.pokemonlibrary.repository.server.ServerCommunicator
 import com.example.pokemonlibrary.di.scope.ApiScope
-import com.squareup.picasso.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.ConnectionPool

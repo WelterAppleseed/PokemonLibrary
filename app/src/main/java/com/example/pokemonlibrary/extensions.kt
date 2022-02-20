@@ -1,18 +1,11 @@
 package com.example.pokemonlibrary
 
 import android.app.Activity
-import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.ImageButton
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
 
 fun String.setNormalCharCases(): String {
@@ -32,8 +25,29 @@ fun ImageButton.setState(isEnabled: Boolean) {
     this.isClickable = isEnabled
 }
 
-fun SharedPreferences.insert(name: String, item: String) {
+fun SharedPreferences.insertString(name: String, item: String) {
     this.edit().putString(name, item).apply()
+}
+fun SharedPreferences.removeString(name: String) {
+    this.edit().remove(name).apply()
+}
+fun SharedPreferences.getString(name: String): String {
+    return this.getString(name, "")!!
+}
+fun SharedPreferences.insertInt(name: String, position: Int) {
+    this.edit().putInt(name, position).apply()
+}
+fun SharedPreferences.getInt(name: String): Int {
+    return this.getInt(name, 0)
+}
+
+fun RecyclerView.setScrollPositionSavedListener(name: String, prefs: SharedPreferences) {
+    this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            prefs.insertInt(name, (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition())
+        }
+    })
+    this.scrollToPosition(prefs.getInt((name)))
 }
 
 fun MutableList<PokemonEntity>.replaceByName(newPokemon: PokemonEntity) {
@@ -43,32 +57,6 @@ fun MutableList<PokemonEntity>.replaceByName(newPokemon: PokemonEntity) {
         }
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.M)
-fun isOnline(context: Context): kotlin.Boolean {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val capabilities =
-        connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-    if (capabilities != null) {
-        when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                return true
-            }
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-                return true
-            }
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-                return true
-            }
-        }
-    }
-    return false
-}
-
 fun Activity.getNoConnectionDialog(withClose: Boolean): AlertDialog {
     val message = if (withClose) {
         "Please, check your internet connection to load list of Pokemons!"

@@ -56,7 +56,8 @@ class FavoritePokemonsFragment : BaseFragment() {
     private fun initRecycler(view: View) {
         val manager = GridLayoutManager(context, 2)
         favPokemonList = repositoryPokemonViewModel?.getAllFavoritesPokemon()!!
-        val adapter = PokemonsAdapter(view.context, favPokemonList, pokemonClickListener, favClickListener)
+        val adapter =
+            PokemonsAdapter(view.context, favPokemonList, pokemonClickListener, favClickListener)
         view.fav_recycler?.layoutManager = manager
         view.fav_recycler?.adapter = adapter
     }
@@ -68,21 +69,22 @@ class FavoritePokemonsFragment : BaseFragment() {
 
     fun updateList(pokemon: PokemonEntity) {
         favPokemonList.add(pokemon)
-        insertToFavs(pokemon.name.lowercase())
     }
 
     private val favClickListener = object : OnAddToFavoriteClickListener {
-        override fun addToFav(pokemon: PokemonEntity) {
+        override fun update(pokemon: PokemonEntity) {
+        }
+
+        override fun add(pokemon: PokemonEntity) {
             updateList(pokemon)
         }
 
-        override fun deleteFromFav(pokemon: PokemonEntity) {
+        override fun delete(pokemon: PokemonEntity) {
             deleteFromFavoritePokemonList(pokemon)
         }
     }
 
     private fun deleteFromFavoritePokemonList(pokemon: PokemonEntity) {
-        deleteFromFavs(pokemon.name)
         val index = favPokemonList.indexOf(pokemon)
         favPokemonList.remove(pokemon)
         repositoryPokemonViewModel?.update(pokemon)

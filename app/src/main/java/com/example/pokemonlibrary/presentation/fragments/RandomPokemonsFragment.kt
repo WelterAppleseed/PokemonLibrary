@@ -43,6 +43,7 @@ class RandomPokemonsFragment : PokemonCardBaseFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.random_card, container, false)
         (view.context.applicationContext as PokemonLibraryApp).getViewModelComponent().inject(this)
+        (view.context.applicationContext as PokemonLibraryApp).getViewModelComponent().inject(this)
         initNavigate(view)
         view.randomize_button.setOnClickListener {
             val deg: Float =  view.randomize_button.rotation + 360f

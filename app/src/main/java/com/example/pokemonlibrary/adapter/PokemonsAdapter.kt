@@ -74,12 +74,13 @@ class PokemonsAdapter(
                 val isFav =  pokemon.isFavorite
                 pokemon.isFavorite = !pokemon.isFavorite
                 if (!isFav) {
-                    nestedFavoriteClickListener.addToFav(pokemon)
                     (it as ImageView).setImageResource(R.drawable.fav_on_dr)
+                    nestedFavoriteClickListener.add(pokemon)
                 } else {
                     (it as ImageView).setImageResource(R.drawable.fav_off_dr)
-                    nestedFavoriteClickListener.deleteFromFav(pokemon)
+                    nestedFavoriteClickListener.delete(pokemon)
                 }
+                nestedFavoriteClickListener.update(pokemon)
             }
         }
 

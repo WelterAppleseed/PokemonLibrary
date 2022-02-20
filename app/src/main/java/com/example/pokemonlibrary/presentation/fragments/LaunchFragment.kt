@@ -22,20 +22,18 @@ class LaunchFragment : BaseFragment() {
     var repositoryPokemonViewModel: RepositoryPokemonViewModel? = null
         @Inject set
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        getGlobalPreferences().edit().clear().apply()
+        super.onCreate(savedInstanceState)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_launch, container, false)
         (view.context.applicationContext as PokemonLibraryApp).getViewModelComponent().inject(this)
-        if (com.example.pokemonlibrary.isOnline(view.context)) {
-            registerNetConnectionReciever()
-            initViewModel(view)
-        } else {
-            this.activity?.getNoConnectionDialog(true)?.show()
-        }
+        initViewModel(view)
         return view
-
     }
 
     private fun initViewModel(view: View) {
@@ -43,9 +41,14 @@ class LaunchFragment : BaseFragment() {
             ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
             repositoryPokemonViewModel?.getAllPokemon(getOnlineState())
             repositoryPokemonViewModel?.getLiveDataPokemon()?.observe(this, {
-            viewModelRandomAndSearch.bundleFromSearch.value = it.toMutableList()
-            view.progress_bar.animate().alpha(0F).setDuration(1000).withEndAction {
-                navigateTo(null, R.id.action_launchFragment_to_menuFragment)
+                if (it.isNotEmpty()) {
+                    registerNetConnectionReciever()
+                    viewModelRandomAndSearch.bundleFromSearch.value = it.toMutableList()
+                    view.progress_bar.animate().alpha(0F).setDuration(1000).withEndAction {
+                        navigateTo(null, R.id.action_launchFragment_to_menuFragment)
+                    }
+                } else {
+                    this.activity?.getNoConnectionDialog(true)?.show()
             }
         })
     }

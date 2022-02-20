@@ -1,6 +1,7 @@
 package com.example.pokemonlibrary.presentation.fragments
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -16,7 +17,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.pokemonlibrary.R
-import com.example.pokemonlibrary.insert
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.pokemon_card.view.*
 
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.pokemon_card.view.*
 abstract class BaseFragment: Fragment() {
     private var navOptions: NavOptions? = null
     private var navController: NavController? = null
-    private val sharedPreferences = this.activity?.getSharedPreferences("favs", Context.MODE_PRIVATE)
+    private var sharedPreferences = this.activity?.getSharedPreferences("global", Context.MODE_PRIVATE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(fav_toolbar)
@@ -38,14 +38,12 @@ abstract class BaseFragment: Fragment() {
     fun navigateTo(bundle: Bundle?, id: Int) {
         navController!!.navigate(id, bundle, navOptions)
     }
-    fun getFavs(): MutableSet<String> {
-        return sharedPreferences?.getStringSet("favs_set", mutableSetOf())!!
-    }
-    fun insertToFavs(item: String) {
-        sharedPreferences?.insert("favs_set", item)
-    }
-    fun deleteFromFavs(item: String) {
-        sharedPreferences?.edit()?.remove(item)?.apply()
+    fun getGlobalPreferences(): SharedPreferences {
+        return if (sharedPreferences == null) {
+            context!!.getSharedPreferences("global", Context.MODE_PRIVATE)
+        } else {
+            sharedPreferences!!
+        }
     }
     fun initMenuBackClickListener(from: Int, backToSingleName: String?) {
         (activity as AppCompatActivity).fav_toolbar.setNavigationIcon(R.drawable.back_dr)
@@ -114,7 +112,7 @@ abstract class BaseFragment: Fragment() {
     }
 
     override fun onDestroy() {
-        this.activity?.getSharedPreferences("connect_state", Context.MODE_PRIVATE)?.edit()?.putString("connect_state", "connection")?.apply()
+        getGlobalPreferences().edit().clear().apply()
         super.onDestroy()
     }
 }

@@ -1,22 +1,22 @@
 package com.example.pokemonlibrary.presentation.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.pokemonlibrary.PokemonLibraryApp
-import com.example.pokemonlibrary.R
+import com.example.pokemonlibrary.*
 import com.example.pokemonlibrary.adapter.PokemonsAdapter
 import com.example.pokemonlibrary.domain.RepositoryPokemonViewModel
 import com.example.pokemonlibrary.domain.SearchRecyclerViewModel
-import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
 import com.example.pokemonlibrary.presentation.interfaces.OnAddToFavoriteClickListener
 import com.example.pokemonlibrary.presentation.interfaces.PokemonCardClickListener
+import com.example.pokemonlibrary.repository.database.entity.PokemonEntity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_searched_pokemons.*
 import kotlinx.android.synthetic.main.fragment_searched_pokemons.view.*
@@ -58,8 +58,10 @@ class SearchedPokemonsFragment : BaseFragment() {
         adapter = PokemonsAdapter(view.context, adapterList, pokemonClickListener, favClickListener)
         view.pokemon_recycler?.layoutManager = manager
         view.pokemon_recycler?.adapter = adapter
+        view.pokemon_recycler.setScrollPositionSavedListener("search_position", getGlobalPreferences())
     }
     private fun initSearch(view: View) {
+        view.pokemon_name_et.setText("${getGlobalPreferences().getString("search_text_value")}")
         view.pokemon_name_et.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -71,26 +73,23 @@ class SearchedPokemonsFragment : BaseFragment() {
                 if (view.pokemon_recycler.adapter != null) {
                     (view.pokemon_recycler.adapter as PokemonsAdapter).filter(s.toString())
                 }
+                getGlobalPreferences().insertString("search_text_value", s.toString())
             }
         })
-        view.pokemon_name_et.setText(searchValue)
     }
 
-    fun updateFavorites(pokemon: PokemonEntity, delete: Boolean) {
-        if (delete) {
-            deleteFromFavs(pokemon.name.lowercase())
-        } else {
-            insertToFavs(pokemon.name.lowercase())
-        }
+    fun updateFavorites(pokemon: PokemonEntity) {
         repositoryPokemonViewModel?.update(pokemon)
     }
     private val favClickListener = object : OnAddToFavoriteClickListener {
-        override fun addToFav(pokemon: PokemonEntity) {
-            updateFavorites(pokemon, false)
+        override fun update(pokemon: PokemonEntity) {
+            updateFavorites(pokemon)
         }
 
-        override fun deleteFromFav(pokemon: PokemonEntity) {
-            updateFavorites(pokemon, true)
+        override fun add(pokemon: PokemonEntity) {
+        }
+
+        override fun delete(pokemon: PokemonEntity) {
         }
     }
 
@@ -115,22 +114,12 @@ class SearchedPokemonsFragment : BaseFragment() {
         viewModelRandomAndSearch = ViewModelProviders.of(requireActivity()).get(SearchRecyclerViewModel::class.java)
         viewModelRandomAndSearch.bundleFromSearch.observe(this, {
             initRecycler(view, it)
+            (view.pokemon_recycler.adapter as PokemonsAdapter).filter(getGlobalPreferences().getString("search_text_value"))
         })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         onSaveInstanceState(Bundle())
-    }
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(context?.getString(R.string.EXTRA_EDIT_TEXT_VALUE), view?.pokemon_name_et?.text.toString())
-        Log.i("SearchedPokemonsFrag", "OnSaveInstanceState: $outState")
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        searchValue = savedInstanceState?.getString(context?.getString(R.string.EXTRA_EDIT_TEXT_VALUE)).toString()
-        Log.i("SearchedPokemonsFrag", "OnViewStateRestored: $savedInstanceState")
-        super.onViewStateRestored(savedInstanceState)
     }
 }

@@ -51,7 +51,6 @@ abstract class PokemonCardBaseFragment: BaseFragment() {
                 view.stats_tv.text = builder
                 builder.clear()
                 Log.i("PokemonCardBaseFragment","Setting name for TextViews")
-                println(pokemon.name)
                 view.pokemon_name.text = pokemon.name.setNormalCharCases()
                 Log.i("PokemonCardBaseFragment","Setting name2 for TextViews")
                 view.pokemon_name.animate().alpha(1F).setDuration(100).start()
